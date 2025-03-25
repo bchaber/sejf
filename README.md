@@ -1,2 +1,2 @@
-# sejf
+# Sejf [ˈseɪf]
 A serverless password manager
