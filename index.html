@@ -1,0 +1,24 @@
+<!doctype html>
+ <head>
+  <script src="js/b2.js"></script>
+  <script src="js/crypto.js"></script>
+  <script src="js/openpgp.js"></script>
+  <script src="js/sejf.js"></script>
+  <script>
+    const config = new URLSearchParams(window.location.hash.substring(1))
+    listSecrets().then((secrets) => {
+	const ul = document.querySelector("#secrets")
+	for (const secret of secrets) {
+	    const li = document.createElement("li")
+	    li.innerText = secret
+	    ul.appendChild(li)
+
+	    console.info(secret)
+	}
+    })
+  </script>
+ </head>
+ <body>
+   <ul id="secrets"></ul>
+ </body>
+</html>
