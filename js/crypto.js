@@ -46,8 +46,8 @@ async function aes256encrypt(dataEncoded, masterPassword) {
 
 async function aes256decrypt(blobEncrypted, masterPassword) {
         const masterKeySalt = blobEncrypted.slice(0, 16)
-	const masterKey = await pbkdf2(masterPassword, masterKeySalt)
 	const initializationVector = blobEncrypted.slice(16, 28)
+	const masterKey = await pbkdf2(masterPassword, masterKeySalt)
 	const dataEncrypted = blobEncrypted.slice(28)
 	const plaintextTextBuffer = await window.crypto.subtle.decrypt({
 		name: "AES-GCM", iv: initializationVector

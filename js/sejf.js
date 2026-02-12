@@ -1,7 +1,7 @@
 async function listSecrets() {
-  const bytes = await download(config.get("accountName") + "/.index")
-  const text = new TextDecoder().decode(bytes)
-  return JSON.parse(text)
+  const body = await list()
+  const json = await body.json()
+  return json
 }
 
 async function uploadSecret(secretName, secretEncoded, masterPassword) {

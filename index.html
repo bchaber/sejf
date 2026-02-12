@@ -1,24 +1,96 @@
 <!doctype html>
+<html>
  <head>
-  <script src="js/b2.js"></script>
+  <script src="js/sb.js"></script>
   <script src="js/crypto.js"></script>
-  <script src="js/openpgp.js"></script>
   <script src="js/sejf.js"></script>
-  <script>
-    const config = new URLSearchParams(window.location.hash.substring(1))
-    listSecrets().then((secrets) => {
-	const ul = document.querySelector("#secrets")
-	for (const secret of secrets) {
-	    const li = document.createElement("li")
-	    li.innerText = secret
-	    ul.appendChild(li)
-
-	    console.info(secret)
-	}
-    })
-  </script>
+  <link rel="stylesheet" href="css/main.css">
+  <meta charset="UTF-8">
  </head>
  <body>
+   <div class="content">
    <ul id="secrets"></ul>
+   <form id="newSecret">
+     <input type="text" id="label"  placeholder="Something" required>
+     <input type="text" id="secret" placeholder="Pa$$w0Rd" required>
+     <button type="submit">＋</button>
+   </form>
+   </div>
  </body>
+ <script defer>
+   function showSecret() {
+     const button = this
+     const secret = button.previousSibling
+     const label  = secret.previousSibling
+     const master = localStorage.getItem("master")
+
+     const state  = secret.className
+     if (state != "decrypted") {
+       downloadSecret(label.value,
+        new TextEncoder().encode(master)
+        ).then((response) => {
+          secret.value = response
+	  secret.className = "decrypted"
+       }).catch(() => {
+          secret.value = "(fetch error)"
+       })
+     } else {
+       secret.value = "(encrypted)"
+       secret.className = "encrypted"
+     }
+   }
+
+   function addSecret(item, data) {
+       const label  = document.createElement("input")
+       const secret = document.createElement("input")
+       const button = document.createElement("button")
+       label.type = "text"
+       label.value = data.label
+       label.disabled = true
+       secret.type = "text"
+       secret.value = data.secret
+       secret.disabled = true
+       button.innerText = "▶"
+       button.onclick = showSecret
+       item.appendChild(label)
+       item.appendChild(secret)
+       item.appendChild(button)
+   }
+
+   const config = new URLSearchParams(window.location.hash.substring(1))
+   newSecret.addEventListener("submit", (event) => {
+       event.preventDefault()
+       const ul = document.querySelector("#secrets")
+       const li = document.createElement("li")
+       const master = localStorage.getItem("master")
+       const secret = event.target.elements.secret
+       const label  = event.target.elements.label
+       addSecret(li, {
+       	 label  : label.value,
+       	 secret : secret.value,
+       })
+       uploadSecret(label.value,
+        new TextEncoder().encode(secret.value),
+        new TextEncoder().encode(master)
+        ).then((response) => {
+          label.value = ""
+          secret.value = ""
+          ul.appendChild(li)
+       }).catch(() => {
+          console.error("Error while adding a secret")
+       })
+   })
+
+   listSecrets().then((secrets) => {
+     const ul = document.querySelector("#secrets")
+     for (const secret of secrets) {
+         const li = document.createElement("li")
+      	 addSecret(li, {
+      	   label  : secret.name,
+      	   secret : "(not fetched)"
+      	 })
+         ul.appendChild(li)
+     }
+   })
+ </script>
 </html>

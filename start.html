@@ -1,0 +1,48 @@
+<!doctype html>
+ <head>
+   <link rel="stylesheet" href="css/main.css">
+ </head>
+ <body>
+   <div class="content">
+      <h1>Konfiguracja</h1>
+
+      <form action="/index.html" id="start">
+        <ul>
+        <li>
+         <label for="account">Account</label>
+         <input type="text" id="account" name="account" placeholder="username">
+        </li><li>
+         <label for="project">Project</label>
+         <input type="text" id="project" name="project" placeholder="abcd...">
+        </li><li>
+         <label for="secret">Secret</label>
+         <input type="text" id="secret" name="secret" placeholder="sb_secret_...">
+        </li><li>
+         <label for="master">Master Password</label>
+         <input type="text" id="master" name="master" placeholder="Your-Master-Password">
+        </li><li>
+         <button type="submit">Configure</button>
+        </li>
+      </form>
+   </div>
+ </body>
+ <script defer>
+   account.value = localStorage.getItem("account")
+   project.value = localStorage.getItem("project")
+   secret.value  = localStorage.getItem("secret")
+   master.value  = localStorage.getItem("master")
+   start.onsubmit = function(event) {
+     localStorage.setItem("project", project.value)
+     localStorage.setItem("account", account.value)
+     localStorage.setItem("secret",  secret.value)
+     localStorage.setItem("master",  master.value)
+     event.preventDefault();
+     const projectUrl = `https://${project.value}.supabase.co/storage/v1/object`
+     const secretKey = `${secret.value}`
+     const accountName = `${account.value}`
+     window.location = '/index.html#' + 
+     `accountName=${accountName}&projectUrl=${projectUrl}&secretKey=${secretKey}`
+   }
+ </script>
+</html>
+
