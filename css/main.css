@@ -134,3 +134,15 @@ form {
     display: flex;
     gap: 6px;
 }
+
+
+h-v {
+    display: inline-block;
+    overflow: hidden;
+    padding: 0px 2px;
+    width: 200px;
+    font-size: 1em;
+    font-weight: normal;
+    font-family: monospace;
+    mask-image: linear-gradient(to right, #020617 70%, transparent 100%);
+}

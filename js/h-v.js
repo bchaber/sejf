@@ -12,29 +12,18 @@ class HexElement extends HTMLElement {
     this.attachShadow({ mode: 'open' });
     this.shadowRoot.innerHTML = `
       <style>
-        :host {
-          display: inline-block;
-          padding: 0px 2px;
-          width: 200px;
-          font-size: 1em;
-          font-weight: normal;
-          font-family: monospace;
-        }
-        div {
+      div {
           display: flex;
-          flex-wrap: wrap;
-          justify-content: center;
+          height: 100%;
           align-items: center;
-          height: 3em;
-        }
-        div b {
+      }
+
+      div b {
           font-size: xx-small;
           transition: color 0.2s ease;
-        }
+      }
       </style>
-      <div></div>
-    `;
-
+      <div></div>`;
     this._el = this.shadowRoot.querySelector('div');
   }
 
