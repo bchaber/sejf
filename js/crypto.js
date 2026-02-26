@@ -4,6 +4,11 @@ function hex(bytes) {
 		    .join("")
 }
 
+function unhex(string) {
+	return Uint8Array.fromHex(string)
+}
+
+
 function base64encode(bytes) {
 	return bytes.toBase64()
 }
@@ -14,6 +19,12 @@ function base64decode(text) {
 
 async function sha1digest(dataEncoded) {
 	const digestBuffer = await window.crypto.subtle.digest("SHA-1", dataEncoded)
+	const digestBytes = new Uint8Array(digestBuffer)
+	return hex(digestBytes)
+}
+
+async function sha512digest(dataEncoded) {
+	const digestBuffer = await window.crypto.subtle.digest("SHA-512", dataEncoded)
 	const digestBytes = new Uint8Array(digestBuffer)
 	return hex(digestBytes)
 }

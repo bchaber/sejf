@@ -17,9 +17,9 @@ async function list() {
   return response
 }
 
-async function upload(secretName, secretEncrypted, secretDigest) {
+async function upload(secretName, secretEncrypted) {
   const token = "Bearer " + config.get("secretKey")
-  const endpoint = config.get("projectUrl") + "/" + secretName
+  const endpoint = config.get("projectUrl") + "/" + config.get("accountName") + "/" + secretName
   const response = await fetch(endpoint, {
 	                     method: "PUT", body: secretEncrypted,
                              headers: {
@@ -32,7 +32,7 @@ async function upload(secretName, secretEncrypted, secretDigest) {
 
 async function download(secretName) {
   const token = "Bearer " + config.get("secretKey")
-  const endpoint = config.get("projectUrl") + "/" + secretName
+  const endpoint = config.get("projectUrl") + "/" + config.get("accountName") + "/" + secretName
   const response = await fetch(endpoint, {
   			   headers: {
                 "apikey": config.get("secretKey"),

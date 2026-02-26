@@ -1,4 +1,41 @@
+.spinner {
+    margin: 0 auto;
+    width: 32px;
+    height: 32px;
+    border: 5px solid #1e293b;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+}
+
+.spinner {
+    width: 96px;
+    height: 16px;
+    display: inline-block;
+    background-color: #1e293b;
+    border: 1px solid #1e293b;
+    border-radius: 4px;
+    background-image: linear-gradient(45deg, rgba(0, 0, 0, 0.25) 25%, transparent 25%, transparent 50%, rgba(0, 0, 0, 0.25) 50%, rgba(0, 0, 0, 0.25) 75%, transparent 75%, transparent);
+    font-size: 20px;
+    background-size: 1em 1em;
+    box-sizing: border-box;
+    animation: stripes 0.5s linear infinite;
+}
+
+@keyframes stripes {
+    0% { background-position: 1em 0 }
+  100% { background-position:   0 0 }
+}
+
+@keyframes rotation {
+      0% { transform: rotate(  0deg) }
+    100% { transform: rotate(360deg) }
+} 
+
 label {
+    width: 100px;
     margin-top: 12px;
     font-size: 13px;
     color: #94a3b8;
@@ -12,15 +49,20 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
 }
 
-.content {
+#content {
     width: 450px;
     background: #020617;
     padding: 20px;
+    margin: 20px;
     border-radius: 8px;
     box-shadow: 0 10px 30px rgba(0,0,0,.6);
+    text-align: center;
+}
+
+hr { 
+    color: #1e293b;
 }
 
 h1 {
@@ -40,6 +82,22 @@ ul li {
     margin-bottom: 8px;
 }
 
+div.hex,
+textarea {
+    display: flex;
+    flex-wrap: wrap;
+    text-align: left;
+    align-content: start;
+    margin: 5px;
+    width: 300px;
+    height: 75px;
+    padding: 8px;
+    background: #020617;
+    border: 1px solid #1e293b;
+    border-radius: 4px;
+    color: #e5e7eb;
+}
+
 input.encrypted {
     border: 1px solid #66293b !important
 }
@@ -47,7 +105,7 @@ input.encrypted {
 input.decrypted {
     border: 1px solid #1e663b !important
 }
-
+ul li div,
 input[type="password"],
 input[type="text"] {
     flex: 1;
@@ -57,16 +115,6 @@ input[type="text"] {
     border-radius: 4px;
     color: #e5e7eb;
 }
-
-/*input[type="text"] {
-    width: 100%;
-    margin-top: 4px;
-}*/
-
-/*input[type="text"]:focus {
-    outline: none;
-    border-color: #38bdf8;
-}*/
 
 button {
     padding: 8px 10px;

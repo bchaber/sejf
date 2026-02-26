@@ -4,18 +4,21 @@
   <script src="js/supabase.js"></script>
   <script src="js/crypto.js"></script>
   <script src="js/sejf.js"></script>
+  <script src="js/hex.js"></script>
   <link rel="stylesheet" href="css/main.css">
   <meta charset="UTF-8">
  </head>
  <body>
-   <div class="content">
+   <div id="content">
    <ul id="secrets"></ul>
+   <hr>
    <form id="newSecret">
      <input type="text" id="label"  placeholder="Something" required>
      <input type="text" id="secret" placeholder="Pa$$w0Rd" required>
      <button type="submit">＋</button>
    </form>
    </div>
+
  </body>
  <script defer>
    function showSecret() {
@@ -26,30 +29,29 @@
 
      const state  = secret.className
      if (state != "decrypted") {
-       downloadSecret(label.value,
-        new TextEncoder().encode(master)
-        ).then((response) => {
-          secret.value = response
-	  secret.className = "decrypted"
-       }).catch(() => {
-          secret.value = "(fetch error)"
-       })
+       aes256decrypt(Uint8Array.fromHex(secret.textContent),
+        new TextEncoder().encode(master)).then((response) => {
+          secret.value = response.toHex()
+          secret.className = "decrypted"
+        })
      } else {
-       secret.value = "(encrypted)"
-       secret.className = "encrypted"
+       aes256encrypt(Uint8Array.fromHex(secret.textContent),
+        new TextEncoder().encode(master)).then((response) => {
+          secret.value = response.toHex()
+          secret.className = "encrypted"
+        })
      }
    }
 
    function addSecret(item, data) {
        const label  = document.createElement("input")
-       const secret = document.createElement("input")
+       const secret = document.createElement("h-v")
        const button = document.createElement("button")
        label.type = "text"
        label.value = data.label
        label.disabled = true
-       secret.type = "text"
-       secret.value = data.secret
-       secret.disabled = true
+       secret.className = "input"
+       secret.innerText = data.secret
        button.innerText = "▶"
        button.onclick = showSecret
        item.appendChild(label)
@@ -65,32 +67,41 @@
        const master = localStorage.getItem("master")
        const secret = event.target.elements.secret
        const label  = event.target.elements.label
-       addSecret(li, {
-       	 label  : label.value,
-       	 secret : secret.value,
-       })
        uploadSecret(label.value,
         new TextEncoder().encode(secret.value),
         new TextEncoder().encode(master)
         ).then((response) => {
+          addSecret(li, {
+            label  : label.value,
+            secret : response.ciphertext
+          })
           label.value = ""
           secret.value = ""
           ul.appendChild(li)
-       }).catch(() => {
-          console.error("Error while adding a secret")
+       }).catch((err) => {
+          console.error("Error while adding a secret: " + err)
        })
    })
 
+   const content = document.querySelector("#content")
+   const spinner = document.createElement("span")
+   spinner.className = "spinner"
+   content.prepend(spinner)
+
+   window.setTimeout(() => {
    listSecrets().then((secrets) => {
+     spinner.className = ""
      const ul = document.querySelector("#secrets")
      for (const secret of secrets) {
          const li = document.createElement("li")
       	 addSecret(li, {
       	   label  : secret.name,
-      	   secret : "(not fetched)"
+      	   secret : secret.text
       	 })
          ul.appendChild(li)
      }
    })
+   }, 200)
+
  </script>
 </html>
